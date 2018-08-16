@@ -91,7 +91,7 @@ main .detail .tag {
 }
 
 main .detail h1 {
-    margin-top: 3vh;
+    margin-top: 2vh;
     font-size: 6vh;
 }
 
@@ -111,7 +111,7 @@ main .detail svg{
 }
 
 main .detail .area-bar {
-    margin-top: 11vh;
+    margin-top: 10vh;
     display: flex;
     align-items: center;
 }
@@ -162,6 +162,17 @@ footer>.layout {
     position: relative;
 }
 
+footer .box {
+    position: relative;
+    overflow: hidden;
+    height: 24vh;
+}
+
+footer ul {
+    position: absolute;
+    left: 0;
+}
+
 footer li {
     float: left;
     margin: 2vh 2vh 0 2vh;
@@ -169,6 +180,10 @@ footer li {
     height: 20vh;
     text-align: center;
     cursor: pointer;
+}
+
+footer li.active {
+    box-shadow: 0 0 .5vh .5vh rgba(255, 255, 255, 0.8);
 }
 
 footer li:hover {
@@ -201,11 +216,11 @@ footer svg:hover {
 }
 
 footer svg.left {
-    left: -7vh;
+    left: -8vh;
 }
 
 footer svg.right {
-    right: -7vh;
+    right: -8vh;
 }
 
 #page-cover {

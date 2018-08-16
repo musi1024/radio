@@ -2,10 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="referrer" content="never">
     <title>Radio</title>
-    <link rel="stylesheet" href="common.css">
-    <link rel="stylesheet" href="style.css">
-    <script src="//at.alicdn.com/t/font_793057_kyurehb9bom.js"></script>
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="//at.alicdn.com/t/font_793057_4rrz0psyzcm.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
     <!-- 当前页面 -->
@@ -15,7 +17,7 @@
                 <figure></figure>
                 <div class="actions">
                     <svg class="icon" aria-hidden="true">
-                        <use xlink:href="#icon-heart"></use>
+                        <use xlink:href="#icon-heart1"></use>
                     </svg>
                     <svg class="icon" aria-hidden="true">
                         <use xlink:href="#icon-play"></use>
@@ -60,24 +62,8 @@
                     <use xlink:href="#icon-right"></use>
                  </svg>
                 <div class="box">
-                    <ul class="clearfix">
-                        <li>
-                            <div class="cover" style="background-image:url(http://cloud.hunger-valley.com/music/public_tuijian_spring.jpg-small)"></div>
-                            <h3>漫步春天</h3>
-                        </li>
-                        <li>
-                            <div class="cover" style="background-image:url(http://cloud.hunger-valley.com/music/public_tuijian_spring.jpg-small)"></div>
-                            <h3>漫步春天</h3>
-                        </li>
-                        <li>
-                            <div class="cover" style="background-image:url(http://cloud.hunger-valley.com/music/public_tuijian_spring.jpg-small)"></div>
-                            <h3>漫步春天</h3>
-                        </li>
-                        <li>
-                            <div class="cover" style="background-image:url(http://cloud.hunger-valley.com/music/public_tuijian_spring.jpg-small)"></div>
-                            <h3>漫步春天</h3>
-                        </li>
-                    </ul>
+                    <!-- JS动态生成li -->
+                    <ul class="clearfix"></ul>
                 </div>
             </div>
         </footer>
@@ -86,5 +72,7 @@
     <section id="page-cover"></section>
     <!-- 背景图 -->
     <div class="bg-picture"></div>
+
+    <script src="./js/main.js"></script>
 </body>
 </html>
