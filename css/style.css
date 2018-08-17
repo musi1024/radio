@@ -110,6 +110,10 @@ main .detail svg{
     margin-right: 1vh;
 }
 
+main .icon.none {
+    display: none;
+}
+
 main .detail .area-bar {
     margin-top: 10vh;
     display: flex;
