@@ -26,6 +26,9 @@
                 .done((e) => {
                     this.renderFooter(e.channels)
                 })
+                .fail(function() {
+                    window.location.reload()
+                })
         },
         renderFooter: function(channels) {
             var html = ''
@@ -39,7 +42,7 @@
                 </li>  
                 `   
             })
-            this.$ul.html(html)
+            this.$ul.append(html)
             this.itemWidth = this.$ul.find('li').outerWidth(true)  
             this.setStyle()   
             this.ulWidth = parseFloat(this.$ul.css('width'))
@@ -53,12 +56,11 @@
         },
         bind: function() {
             $('.right').on('click', () => {
-                var rowCount = Math.floor(this.$box.width()/this.itemWidth) 
                 if (this.canRight) {
                     this.canRight = false
                     this.$ul.animate({  
-                        left: '-=' + rowCount * this.itemWidth
-                    },rowCount*100,() => {
+                        left: '-=' + 3 * this.itemWidth
+                    },400,() => {
                         this.ulPosition = parseFloat(this.$ul.css('left')) 
                         this.canLeft = true
                         if(this.$box.width()-this.ulWidth >= this.ulPosition) {
@@ -70,12 +72,11 @@
                 }                  
             })
             $('.left').on('click', () => { 
-                var rowCount = Math.floor(this.$box.width()/this.itemWidth) 
                 if(this.canLeft) {
                     this.canLeft = false
                     this.$ul.animate({
-                        left: '+=' + rowCount * this.itemWidth
-                    },rowCount*100,() => {
+                        left: '+=' + 3 * this.itemWidth
+                    },400,() => {
                         this.ulPosition = parseFloat(this.$ul.css('left')) 
                         this.canRight = true  
                         console.log(this.ulPosition)
@@ -106,7 +107,7 @@
             this.view = $('main')
             this.audio = new Audio()
             this.audio.autoplay = true
-
+            
             this.render()
             this.bind()
         },
@@ -114,6 +115,7 @@
             this.loadMusic()
         },
         bind: function() {
+            var _this = this
             EventCenter.on('select-albumn', (e, channelObj) => {
                 this.cannelId = channelObj.cannelId
                 this.channelName = channelObj.channelName
@@ -133,13 +135,39 @@
             $('.btn-next').on('click', () => {
                 this.loadMusic()
             })
+            $('.bar').on('click', function(e){
+                var barLeft = $('.bar').offset().left
+                var clientX = e.clientX
+                var barWidth = this.offsetWidth
+                var newPosition = (clientX - barLeft) / barWidth * 100
+                $('.bar-progress').css('width', newPosition +'%')
+                _this.audio.currentTime = newPosition /100 * _this.audio.duration
+                _this.updateStatus()
+            })
+
+            this.audio.addEventListener('play', () => {
+                console.log('play')
+                clearInterval(this.statusClock)
+                this.statusClock = setInterval(() => {
+                    this.updateStatus()
+                },1000)
+            })    
+            this.audio.addEventListener('pause', () => {
+                console.log('pause')
+                clearInterval(this.statusClock)
+            })
         },
         loadMusic: function() {
             var url = 'http://api.jirengu.com/fm/getSong.php?channel=' + this.cannelId
-            $.getJSON(url).done((song) =>{
-                this.song = song.song[0]
-                this.setMusic()
-            })
+            $.getJSON(url)
+                .done((song) =>{
+                    this.song = song.song[0]
+                    this.setMusic()
+                    this.loadLyric()
+                })
+                .fail(() => {
+                    window.location.reload()
+                })         
         },
         setMusic: function() {
             this.audio.src = this.song.url
@@ -151,6 +179,39 @@
             this.view.find('.btn-play').addClass('none')
             this.view.find('.btn-pause').removeClass('none')
         },
+        updateStatus: function() {
+            var min = Math.floor(this.audio.currentTime/60)
+            var second = Math.floor(this.audio.currentTime%60) + ''
+            second = second.length === 2 ? second : '0' + second    
+            this.view.find('.current-time').text(min + ':' + second)
+            this.view.find('.bar-progress').css(
+                'width', this.audio.currentTime/this.audio.duration*100+'%'
+            )
+            
+            var showingLyric = this.lyricObj['0'+ min + ':' + second] 
+            if (showingLyric) {
+                this.view.find('.lyric > p').text(showingLyric)
+            }
+        },
+        loadLyric: function() {
+            console.log(this.song)
+            var url = 'http://jirenguapi.applinzi.com/fm/getLyric.php?&sid=' + this.song.sid
+            $.getJSON(url).done((lyric) =>{
+                var lyric = lyric.lyric
+                var lyricObj = {}
+                lyric.split('\n').forEach(function(line) {
+                    var times = line.match(/\d{2}:\d{2}/g)
+                    var str = line.replace(/\[.+?\]/g, '')
+                    if (Array.isArray(times)) {
+                        times.forEach(function(time){
+                            lyricObj[time] = str
+                        })
+                    }
+                })
+                this.lyricObj = lyricObj
+                console.log(lyricObj)
+            })
+        }, 
     }
 
     footer.init()
