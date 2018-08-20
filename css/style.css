@@ -54,7 +54,6 @@ main .aside {
 }
 
 main .aside > figure {
-    /* background: url(http://cloud.hunger-valley.com/music/public_tuijian_spring.jpg-middle); */
     width: 46vh;
     height: 46vh;
     background-size: cover; 
@@ -78,6 +77,9 @@ main .aside svg:hover {
     color: #fff;
 }
 
+main .aside .like {
+    color: red;
+}
 
 main .detail {
     margin-left: 56vh;
@@ -99,7 +101,7 @@ main .detail .icons {
     display: flex;
     margin-top: 12vh;
     font-size: 3vh;
-}   
+} 
 
 main .detail li {
     flex: 1;
@@ -236,8 +238,6 @@ footer svg.right {
 .bg-picture {
     position: absolute;
     z-index: -1;
-    /* background: url(http://cloud.hunger-valley.com/music/public_tuijian_spring.jpg-big) */
-    center center no-repeat;
     background-size: cover;
     top: -10px;
     left: -10px;

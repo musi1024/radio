@@ -20,14 +20,12 @@
             this.canLeft = false
             this.render()
             this.bind()
+            
         },
         render: function() {
             $.getJSON('http://api.jirengu.com/fm/getChannels.php')
                 .done((e) => {
                     this.renderFooter(e.channels)
-                })
-                .fail(function() {
-                    window.location.reload()
                 })
         },
         renderFooter: function(channels) {
@@ -79,7 +77,6 @@
                     },400,() => {
                         this.ulPosition = parseFloat(this.$ul.css('left')) 
                         this.canRight = true  
-                        console.log(this.ulPosition)
                         if(this.ulPosition >= -1) {
                             this.canLeft = false
                         } else {
@@ -93,7 +90,7 @@
                 $(this).addClass('active')
                   .siblings().removeClass('active')
                 EventCenter.fire('select-albumn',{
-                    cannelId: $(this).attr('data-channel-id'),
+                    channelId: $(this).attr('data-channel-id'),
                     channelName: $(this).attr('data-channel-name')  
                 })          
             })
@@ -101,26 +98,59 @@
     }
 
     var fm = {
-        channel_id: '',
+        loves: {},
+        channelId: '',
         channelName: '随机播放',
         init: function() {
             this.view = $('main')
             this.audio = new Audio()
             this.audio.autoplay = true
+            this.loves = JSON.parse(localStorage.getItem('Loves'))
+            if (this.loves !== null && !$.isEmptyObject(this.loves)) {
+                this.channelId = 'mylove'
+                this.channelName = 'MyLove'
+                $('.btn-heart').addClass('like') 
+            }
+                   
             
-            this.render()
             this.bind()
+            this.render()
         },
         render: function() {
-            this.loadMusic()
+            this.loadMusic()   
         },
         bind: function() {
             var _this = this
             EventCenter.on('select-albumn', (e, channelObj) => {
-                this.cannelId = channelObj.cannelId
-                this.channelName = channelObj.channelName
-                console.log(this.cannelId, this.channelName)
-                this.loadMusic()
+                if (channelObj.channelId === 'mylove') {
+                    if (this.loves !== null && !$.isEmptyObject(this.loves)) {
+                        this.channelId = channelObj.channelId
+                        this.channelName = channelObj.channelName
+                        $('.btn-heart').addClass('like')
+                        this.loadMusic()
+                    }  
+                } else {
+                    this.channelId = channelObj.channelId
+                    this.channelName = channelObj.channelName
+                    $('.btn-heart').removeClass('like')
+                    this.loadMusic()
+                }  
+            })
+            $('.btn-heart').on('click', () => {
+                console.log(this.song)
+                if (this.loves === null) {
+                    this.loves = {}
+                }
+                if (this.loves.hasOwnProperty(this.song.sid)) {
+                    delete this.loves[this.song.sid]
+                    var data = JSON.stringify(this.loves)
+                    window.localStorage.setItem('Loves', data)
+                } else {
+                    this.loves[this.song.sid] = this.song
+                    var data = JSON.stringify(this.loves)     
+                    window.localStorage.setItem('Loves', data)
+                }
+                $('.btn-heart').toggleClass('like')
             })
             $('.btn-play').on('click', () => {
                 $('.btn-play').addClass('none')
@@ -153,21 +183,34 @@
                 },1000)
             })    
             this.audio.addEventListener('pause', () => {
-                console.log('pause')
                 clearInterval(this.statusClock)
+            })
+            this.audio.addEventListener('ended', () => {
+                this.loadMusic()    
             })
         },
         loadMusic: function() {
-            var url = 'http://api.jirengu.com/fm/getSong.php?channel=' + this.cannelId
-            $.getJSON(url)
-                .done((song) =>{
-                    this.song = song.song[0]
-                    this.setMusic()
-                    this.loadLyric()
-                })
-                .fail(() => {
-                    window.location.reload()
-                })         
+            if (this.channelId === 'mylove') {
+                var song = []
+                for (let key in this.loves) {
+                    if (this.loves.hasOwnProperty(key)) {
+                        song.push(this.loves[key])
+                    }
+                }
+                this.index = Math.floor(Math.random()*(song.length))
+                this.song = song[this.index]
+                $('.btn-heart').addClass('like')
+                this.setMusic()
+                this.loadLyric()
+            } else {
+                var url = 'http://api.jirengu.com/fm/getSong.php?channel=' + this.cannelId
+                $.getJSON(url)
+                    .done((song) =>{
+                        this.song = song.song[0]
+                        this.setMusic()
+                        this.loadLyric()  
+                    }) 
+            }       
         },
         setMusic: function() {
             this.audio.src = this.song.url
@@ -194,7 +237,6 @@
             }
         },
         loadLyric: function() {
-            console.log(this.song)
             var url = 'http://jirenguapi.applinzi.com/fm/getLyric.php?&sid=' + this.song.sid
             $.getJSON(url).done((lyric) =>{
                 var lyric = lyric.lyric
@@ -209,7 +251,6 @@
                     }
                 })
                 this.lyricObj = lyricObj
-                console.log(lyricObj)
             })
         }, 
     }
