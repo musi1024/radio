@@ -23,7 +23,7 @@
             
         },
         render: function() {
-            $.getJSON('https://api.jirengu.com/fm/getChannels.php')
+            $.getJSON('https://jirenguapi.applinzi.com/fm/getChannels.php')
                 .done((e) => {
                     this.renderFooter(e.channels)
                 })
@@ -203,7 +203,7 @@
                 this.setMusic()
                 this.loadLyric()
             } else {
-                var url = 'https://api.jirengu.com/fm/getSong.php?channel=' + this.cannelId
+                var url = 'https://jirenguapi.applinzi.com/fm/getSong.php?channel=' + this.cannelId
                 $.getJSON(url)
                     .done((song) =>{
                         this.song = song.song[0]
