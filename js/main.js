@@ -109,15 +109,15 @@
             if (this.loves !== null && !$.isEmptyObject(this.loves)) {
                 this.channelId = 'mylove'
                 this.channelName = 'MyLove'
-                $('.btn-heart').addClass('like') 
-            }
-                   
-            
+                $('.btn-heart').addClass('like')    
+            }    
             this.bind()
-            this.render()
+            this.render() 
+            $('btn-pause').click()
+            $('btn-play').click() 
         },
         render: function() {
-            this.loadMusic()   
+            this.loadMusic()                                    
         },
         bind: function() {
             var _this = this
@@ -159,7 +159,7 @@
             })
             $('.btn-pause').on('click', () => {
                 this.audio.pause()
-                $('.btn-pause') .addClass('none')
+                $('.btn-pause').addClass('none')
                 $('.btn-play').removeClass('none')
             })
             $('.btn-next').on('click', () => {
@@ -209,7 +209,7 @@
                         this.song = song.song[0]
                         this.setMusic()
                         this.loadLyric()  
-                    }) 
+                    })
             }       
         },
         setMusic: function() {
@@ -221,6 +221,7 @@
             this.view.find('.detail .tag').text(this.channelName)
             this.view.find('.btn-play').addClass('none')
             this.view.find('.btn-pause').removeClass('none')
+            this.audio.autoplay = true
         },
         updateStatus: function() {
             var min = Math.floor(this.audio.currentTime/60)
@@ -254,7 +255,6 @@
             })
         }, 
     }
-
     footer.init()
     fm.init()
 }()
