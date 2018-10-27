@@ -101,6 +101,7 @@
         loves: {},
         channelId: '',
         channelName: '随机播放',
+        lyricObj: null ,
         init: function () {
             this.view = $('main')
             this.audio = new Audio()
@@ -205,7 +206,7 @@
                 var url = 'https://jirenguapi.applinzi.com/fm/getSong.php?channel=' + this.channelId
                 $.getJSON(url)
                     .done((song) => {
-                        if(!song.url){
+                        if (!song.url) {
                             this.song = song.song[0]
                             this.setMusic()
                             this.loadLyric()
@@ -229,17 +230,21 @@
             this.view.find('.bar-progress').css(
                 'width', this.audio.currentTime / this.audio.duration * 100 + '%'
             )
-            var showingLyric = this.lyricObj['0' + min + ':' + second]
-            if (showingLyric) {
-                this.view.find('.lyric > p').text(showingLyric)
-            }
+            if (this.lyricObj) {
+                var showingLyric = this.lyricObj['0' + min + ':' + second]
+                console.log(showingLyric)
+                if (showingLyric) {
+                    this.view.find('.lyric > p').text(showingLyric)
+                }
+            } else {
+                this.view.find('.lyric > p').text('暂无此歌曲歌词')
+            }     
         },
         loadLyric() {
             var url = 'https://jirenguapi.applinzi.com/fm/getLyric.php?&sid=' + this.song.sid
+            this.lyricObj = null
             $.getJSON(url).done((lyric) => {
-                console.log('2222')
                 var lyric = lyric.lyric
-                console.log(lyric)
                 var lyricObj = {}
                 lyric.split('\n').forEach(function (line) {
                     var times = line.match(/\d{2}:\d{2}/g)
