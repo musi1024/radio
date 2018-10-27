@@ -61,16 +61,17 @@ main .aside > figure {
 
 main .aside .actions {
     display: flex;
+    justify-content: space-around;
     margin-top: 5vh;
 }
 
 main .aside svg {
-    flex: 1;
+    /* flex: 1; */
     text-align: center;
     font-size: 5vh;
     color: rgba(255, 255, 255, 0.2);
-    cursor: pointer;
     transition: color 0.4s;
+    cursor: pointer;
 }
 
 main .aside svg:hover {

@@ -155,9 +155,9 @@
                 $('.btn-heart').toggleClass('like')
             })
             $('.btn-play').on('click', () => {
-                $('.btn-play').addClass('none')
-                $('.btn-pause').removeClass('none')
                 this.audio.play()
+                $('.btn-play').addClass('none')
+                $('.btn-pause').removeClass('none')      
             })
             $('.btn-pause').on('click', () => {
                 this.audio.pause()
@@ -236,7 +236,6 @@
             )
             if (this.lyricObj) {
                 var showingLyric = this.lyricObj['0' + min + ':' + second]
-                console.log(showingLyric)
                 if (showingLyric) {
                     this.view.find('.lyric > p').text(showingLyric)
                 }
