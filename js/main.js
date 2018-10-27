@@ -101,7 +101,7 @@
         loves: {},
         channelId: '',
         channelName: '随机播放',
-        lyricObj: null ,
+        lyricObj: null,
         init: function () {
             this.view = $('main')
             this.audio = new Audio()
@@ -157,7 +157,7 @@
             $('.btn-play').on('click', () => {
                 this.audio.play()
                 $('.btn-play').addClass('none')
-                $('.btn-pause').removeClass('none')      
+                $('.btn-pause').removeClass('none')
             })
             $('.btn-pause').on('click', () => {
                 this.audio.pause()
@@ -203,9 +203,11 @@
                 }
                 this.index = Math.floor(Math.random() * (song.length))
                 this.song = song[this.index]
-                $('.btn-heart').addClass('like')
-                this.setMusic()
-                this.loadLyric()
+                if (this.song) {
+                    $('.btn-heart').addClass('like')
+                    this.setMusic()
+                    this.loadLyric()
+                }
             } else {
                 var url = 'https://jirenguapi.applinzi.com/fm/getSong.php?channel=' + this.channelId
                 $.getJSON(url)
@@ -241,7 +243,7 @@
                 }
             } else {
                 this.view.find('.lyric > p').text('暂无此歌曲歌词')
-            }     
+            }
         },
         loadLyric() {
             var url = 'https://jirenguapi.applinzi.com/fm/getLyric.php?&sid=' + this.song.sid
