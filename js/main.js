@@ -127,6 +127,8 @@
                         this.channelName = channelObj.channelName
                         $('.btn-heart').addClass('like')
                         this.loadMusic()
+                        $('.btn-play').addClass('none')
+                        $('.btn-pause').removeClass('none')
                     }
                 } else {
                     this.channelId = channelObj.channelId
@@ -164,6 +166,8 @@
             })
             $('.btn-next').on('click', () => {
                 this.loadMusic()
+                $('.btn-play').addClass('none')
+                $('.btn-pause').removeClass('none')
             })
             $('.bar').on('click', function (e) {
                 var barLeft = $('.bar').offset().left

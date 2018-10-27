@@ -81,6 +81,10 @@ main .aside .like {
     color: red;
 }
 
+main .aside .like:hover {
+    color: red;
+}
+
 main .detail {
     margin-left: 56vh;
     color: #fff;
