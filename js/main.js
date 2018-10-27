@@ -180,7 +180,6 @@
             })
 
             this.audio.addEventListener('play', () => {
-                console.log('play')
                 clearInterval(this.statusClock)
                 this.statusClock = setInterval(() => {
                     this.updateStatus()
