@@ -212,6 +212,7 @@
                 $.getJSON(url)
                     .done((song) => {
                         if (!song.url) {
+                            $('.btn-heart').removeClass('like')
                             this.song = song.song[0]
                             this.setMusic()
                             this.loadLyric()
